@@ -1,0 +1,1203 @@
+
+<!-- <app-guidance-project></app-guidance-project> -->
+<style>
+  #trash:hover{
+    background-color: #020052bb;
+    color : #FFF !important;
+  }
+
+   .btn-active-danger:hover {
+    background-color: #020052bb !important;
+    color : #FFF !important;
+  }
+
+  .btn-info {
+    
+    background-color: #020052bb !important;
+    color: #fff;
+  }
+  .ibuttoncss{
+    padding: 0.1em 0.01em 0.01em 0.01em;
+    border: none;
+    background-color: #ffebcd00;
+  } 
+  
+</style>
+
+<span [id]="project.id" style="display: none;"></span>
+
+<div class="row">
+
+    <div class="col-md-6">
+      <div class="card card-dashed">
+        <div class="card-header">
+          <h3 class="card-title  col-md-6"><b>{{project.name}}</b></h3>
+          <div class="card-toolbar"  ></div>
+            <!-- <button class="btn btn-success btn-sm psull-right" (click)="openModal(modalEditProject)">Help</button>
+            &nbsp; -->
+            <button class="btn btn-info btn-sm pull-right" *ngIf = "allow_editing" style="padding:4px;width:71px;"
+             (click)="openModal(modalEditProject)">Edit</button>
+             
+             <button class="btn btn-info btn-sm pull-right" *ngIf = "allow_delete" style="padding:5px;width:71px;"
+
+             (click)="openModal(modalDeleteProject)">Delete</button>
+            
+            <!-- <ng-template #trueBlock>
+              <button class="btn btn-info btn-sm pull-right" style="padding:4px;width:71px;" (click)="openModal(modalEditProject)">Edit</button>
+             
+              </ng-template>              
+              <ng-template #falseBlock>
+                Bhagwat is a mad             
+              
+              
+              </ng-template>
+             -->
+            
+          
+        </div>
+        <div class="card-body">
+            {{project.description}}<br/><br/>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <label style="font-weight: bold;">Field of Interest</label><br/>
+                {{this.ProjectDomain | CapitalizeFirstLetter}}<br/>
+              </div>
+              <div class="col-md-6">
+                <label style="font-weight: bold;">Tags</label><br/>
+                {{this.ProjectTags | CapitalizeFirstLetter}}<br/>
+              </div>
+            </div>
+            <br/>
+            <div class="row">
+              
+              <!-- <div class="col-md-6">
+                <label style="font-weight: bold;">Insitute</label><br/>
+                {{Institute_Name}}<br/><br/>
+ 
+              </div> -->
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label style="font-weight: bold;">Start Date</label><br/>
+                {{this.ProjectStartDate | date: 'dd-MM-YYYY'}}<br/>
+              </div>
+              <div class="col-md-6">
+                <label style="font-weight: bold;">End Date</label><br/>
+                <!-- <input class="form-control-sm form-control sm-2" (change)="updateEndDate($event);" type="date" name="ProjectEndDate" value={{this.ProjectEndDate}} /><br/><br/> -->
+                {{this.ProjectEndDate | date: 'dd-MM-YYYY'}}
+              
+ 
+              </div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="col-md-6">
+                <label style="font-weight: bold;">Status</label><br/>
+                {{this.ProjectStatus}}<br/>
+              </div> 
+              <!-- added by bhagwat for project type start-->
+              <div class="col-md-6">
+                <label style="font-weight: bold;">Project Type</label><br/>
+                {{this.Projecttype |CapitalizeFirstLetter}}<br/>
+              </div>
+              <!-- end -->
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card card-dashed">
+        <div class="card-header">
+          
+          <h3 class="card-title">Milestones</h3>
+          <div class="card-toolbar" *ngIf = "allow_editing">
+            <!-- <button class="btn btn-success btn-sm psull-right" (click)="openModalLarge(modalHelpMilestone);">Help</button> -->
+            &nbsp;
+            <button class="btn btn-sm pull-right" style="background-color:#020052bb;color:#fff;padding:5px;" (click)="openModal(modalAddMilestone);">Add Milestone</button>
+            <button type="button"    class="btn btn-outline-secondary me-2" class=" ibuttoncss"    placement="bottom"   title="Milestones are important dates marking a stage completion in the project. Create new or mark a milestone complete. Also share your achievements on the Feeds." >  
+              <i class="bi bi-question-square m-2"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body pt-0">
+          <br/>
+          <!-- Competitions Milestone -->
+          <!-- Competition milestone -->
+          <h3 class="card-title">Competition Milestones</h3>
+          <div class="d-flex align-items-center rounded p-2 mb-7" style="background:#f4f4f4;" 
+              *ngFor="let stage of this.ProjectCompetition.Stages;" id="mile_{{stage.id}}">
+              <img src="./assets/miles_complete.png" alt="milestone" style="background:none;width:15px;margin:0.5em;" />
+              <!-- <img *ngIf="mile.isCompleted===true" src="./assets/miles_complete.png" alt="milestone" style="background:none;width:15px;margin:0.5em;" /> -->
+              <div class="flex-grow-1 pe-5" style="padding:0.2em;">
+                <span class="fw-bolder text-gray-800 text-hover-primary fs-6">{{stage.name}}</span>
+                  <span class="text-muted fw-bold d-block">{{stage.endDate | smallerdate | date: 'dd/MM/yyyy'}}</span>
+              </div>
+
+              <!-- <span class="fw-bolder text-success py-1">
+               
+                 <button class="btn btn-sm " id="complete">
+                  <i *ngIf = "allow_editing" class="bi bi-check-circle"></i>
+                </button>
+            
+              </span> -->
+          </div>
+          <!-- end -->
+          <!-- Project Milestone -->
+          <h3 class="card-title">Project Milestones</h3>
+          <span *ngFor="let mile of this.milestones">
+          <div class="d-flex align-items-center rounded p-2 mb-7" *ngIf="mile.isCompleted==true" style="background:#c1ffb9;" 
+               id="mile_{{mile.id}}">
+             
+              <!-- <img *ngIf="mile.isCompleted===false" src="./assets/miles-bg.png"     alt="milestone" style="background:none;width:15px;margin:0.5em;" /> -->
+              <img *ngIf="mile.isCompleted===true" src="./assets/miles_complete.png" alt="milestone" style="background:c1ffb9;width:15px;margin:0.5em;" />
+              <div class="flex-grow-1 pe-5" style="padding:0.2em;">
+                <span class="fw-bolder text-gray-800 text-hover-primary fs-6">{{mile.milestone}}</span>
+                  <span class="text-muted fw-bold d-block">{{mile.milestoneDate | smallerdate | date: 'dd/MM/yyyy'}}</span>
+              </div>
+
+              <span class="fw-bolder text-success py-1" >
+                <!-- <button *ngIf="status === 'In-Progress'" class="btn btn-sm " id="complete" (click)="openModalLarge(modalPostNew);PostMilestoneFeed(mile.id)" >
+                  <img src="./assets/complete_mark.png" alt="mark_as_complete" style="background:none;width:15px;" /> 
+                </button> -->
+                 <button  (click)="openModalMilestone(milestoneComplete,mile.id,mile.milestone,mile.isCompleted);" class="btn btn-sm " id="complete">
+                  <i *ngIf = "allow_Lead_CoLead" [ngClass]="{'complete' : mile.isCompleted,  'in-progress': !mile.isCompleted}" class="bi bi-check-circle"></i>
+                </button>
+                <button class="btn btn-sm " id="complete" (click)="openModalLarge(modalPostNew);PostMilestoneFeed(mile.id,mile.milestone)">
+                  <i *ngIf = "allow_Lead_CoLead && mile.isCompleted==true "  class="bi bi-megaphone"></i>
+                </button>
+                <button class="btn btn-sm " *ngIf = "allow_Lead_CoLead" id="trash" (click)="RemoveMilestone(mile.id)" >
+                  <i *ngIf = "allow_Lead_CoLead" class="fas fa-trash"></i></button>
+              </span>
+           
+          </div>
+          <div class="d-flex align-items-center rounded p-2 mb-7" *ngIf="mile.isCompleted==false" style="background:#f4f4f4;" 
+          id="mile_{{mile.id}}">
+        
+         <img *ngIf="mile.isCompleted===false" src="./assets/miles-bg.png"      alt="milestone" style="background:none;width:15px;margin:0.5em;" />
+         <!-- <img *ngIf="mile.isCompleted===true" src="./assets/miles_complete.png" alt="milestone" style="background:none;width:15px;margin:0.5em;" /> -->
+         <div class="flex-grow-1 pe-5" style="padding:0.2em;">
+           <span class="fw-bolder text-gray-800 text-hover-primary fs-6">{{mile.milestone}}</span>
+             <span class="text-muted fw-bold d-block">{{mile.milestoneDate | smallerdate | date: 'dd/MM/yyyy'}}</span>
+         </div>
+
+         <span class="fw-bolder text-success py-1" >
+           <!-- <button *ngIf="status === 'In-Progress'" class="btn btn-sm " id="complete" (click)="openModalLarge(modalPostNew);PostMilestoneFeed(mile.id)" >
+             <img src="./assets/complete_mark.png" alt="mark_as_complete" style="background:none;width:15px;" /> 
+           </button> -->
+            <button  (click)="openModalMilestone(milestoneComplete,mile.id,mile.milestone,mile.isCompleted);" class="btn btn-sm " id="complete">
+             <i *ngIf = "allow_Lead_CoLead" [ngClass]="{'complete' : mile.isCompleted,  'in-progress': !mile.isCompleted}" class="bi bi-check-circle"></i>
+           </button>
+           <!-- <button class="btn btn-sm " id="complete" (click)="openModalLarge(modalPostNew);PostMilestoneFeed(mile.id,mile.milestone)">
+             <i *ngIf = "allow_editing "  class="bi bi-megaphone"></i>
+           </button> -->
+           <button class="btn btn-sm " *ngIf = "allow_Lead_CoLead" id="trash" (click)="RemoveMilestone(mile.id)" >
+             <i *ngIf = "allow_Lead_CoLead" class="fas fa-trash"></i></button>
+         </span>
+      
+     </div>
+        </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br/>
+  <div class="row">
+  <div class="col-md-12">
+    <div class="card card-dashed">
+      <div class="card-header">
+        <h3 class="card-title">Project Members </h3>
+        <div class="card-toolbar" *ngIf = "allow_editing">
+          <!-- <button class="btn btn-success btn-sm psull-right" (click)="openModalLarge(modalHelpMilestone);">Help</button> -->
+          &nbsp;
+          <button  class="btn btn-info btn-sm pull-right" style="background-color:#020052bb !important;padding:5px;width:105px;"  (click)="openModal(modalAddMember)" >  Add Member </button>
+          <button type="button"    class="btn btn-outline-secondary me-2" class=" ibuttoncss"    placement="bottom"   title=" Invite or  Remove members in your project. Invite Faculty members or Experts to assess your project. Also, Rate you team members once the project gets over." >  
+            <i class="bi bi-question-square m-2"></i>
+          </button>
+        </div>
+      </div>
+      <style>
+        .h{color:purple; background-color: #FFFFF3;text-align: center;}
+        .c{text-align: center;}
+      </style>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr style="background:#f4f4f4;">
+              <th><b>Member</b></th>
+              <th><b>Role</b></th>
+              <!-- <th><b>Hipster </b></th>
+              <th><b>Hacker  </b></th>
+              <th><b>Hustler </b></th>
+              <th><b>Grade  <button type="button"    class="btn btn-outline-secondary me-2" class=" ibuttoncss"    placement="bottom"   title="Once the Project Status is completed then only grade button is enabled." >  
+                <i class="bi bi-question-square m-2"></i>
+              </button> </b></th> -->
+              <th style="width:1%"  *ngIf = "allow_editing"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let mem of this.members" style="border-bottom:1px dotted #e1e1e1 !important;">
+              <td>
+                <app-profile-pic entity_id="{{mem.entityId}}" profile_name="{{mem.entityName}}"  profile_size="tiny"></app-profile-pic>
+                <a routerLink="/entity/{{mem.entityId}}/overview">
+
+                  {{mem.entityName}}
+
+                  <i *ngIf="mem.roleName == 'Expert / Reviewer'" class="fas fa-crown" style="color: orange"></i>
+
+                </a>
+              </td>
+              <td>{{mem.roleName}}</td>
+              
+              <!-- <td>{{mem.gradeHipster}}</td>
+              <td>{{mem.gradeHacker}}</td>
+              <td>{{mem.gradeHustler}}</td>
+              <td class="text-right py-0 align-middle">
+                <div class="btn-group btn-group-sm" >
+                  <button class="btn btn-active-danger"  *ngIf="CheckProjectCompletion()" (click)="openModal(modalAddGrade,mem.entityId,mem.entityName)"
+                  [hidden]="mem.entityId==this.service.StorageGetItem('Entity_ID')"
+                  title="Assign Grade"><i class="fas fa-award"></i></button>
+                </div>
+              </td> -->
+              <td style="width:1%" class="text-right py-0 align-middle"  *ngIf = "allow_editing">
+                <div class="btn-group btn-group-sm">
+                  <button class="btn" [hidden]="mem.entityId==this.ProjectCreatedById" *ngIf = "allow_editing" id="trash" (click)="ProjectMemberRemove(mem.entityId)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngFor="let judge of this.assignedJudge;let i=index">
+              <td>
+                <app-profile-pic entity_id="{{judge.id}}" profile_name="{{judge.name}}"  profile_size="tiny"></app-profile-pic>
+                
+                <a routerLink="/entity/{{judge.id}}/overview">
+
+                  {{judge.name}}
+
+
+                </a>
+
+                <!-- <i class="fa fa-gavel" aria-hidden="true" style="color: #000;font-size: 22px;"></i> -->
+              </td>
+              <td>Judge</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+  </div>
+<br/>
+<div class="row">
+  
+  <div class="col-md-12">
+    <div class="card card-dashed">
+      <div class="card-header">
+        <h3 class="card-title">Competition Questionnaire</h3>
+      </div>
+      <div class="card-body">
+        <!-- <div class="row">
+          <div class="col-md-6">
+            <span style="height:40px;">&nbsp;</span>
+        <select name="Questionnaire" size="1" class="form-select form-select-sm form-select-solid ">
+          <option>Select Round</option>
+          <option >Round 1</option>
+          <option>Final Round</option>
+          </select>
+          </div>
+        </div> -->
+        <!-- <button  class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+        data-bs-toggle="tooltip" data-bs-dismiss-="click" (click)="openModalLarge(QuestionnaireModal)" >Exam</button> -->
+
+        <br/>
+        <br/>
+        <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed mb-9 p-6">
+          <span class="svg-icon svg-icon-2tx svg-icon-primary me-4"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path opacity="0.3" d="M3.20001 5.91897L16.9 3.01895C17.4 2.91895 18 3.219 18.1 3.819L19.2 9.01895L3.20001 5.91897Z" fill="currentColor"></path>
+          <path opacity="0.3" d="M13 13.9189C13 12.2189 14.3 10.9189 16 10.9189H21C21.6 10.9189 22 11.3189 22 11.9189V15.9189C22 16.5189 21.6 16.9189 21 16.9189H16C14.3 16.9189 13 15.6189 13 13.9189ZM16 12.4189C15.2 12.4189 14.5 13.1189 14.5 13.9189C14.5 14.7189 15.2 15.4189 16 15.4189C16.8 15.4189 17.5 14.7189 17.5 13.9189C17.5 13.1189 16.8 12.4189 16 12.4189Z" fill="currentColor"></path>
+          <path d="M13 13.9189C13 12.2189 14.3 10.9189 16 10.9189H21V7.91895C21 6.81895 20.1 5.91895 19 5.91895H3C2.4 5.91895 2 6.31895 2 6.91895V20.9189C2 21.5189 2.4 21.9189 3 21.9189H19C20.1 21.9189 21 21.0189 21 19.9189V16.9189H16C14.3 16.9189 13 15.6189 13 13.9189Z" fill="currentColor"></path>
+          </svg>
+          </span>
+           <div class="d-flex flex-stack flex-grow-1 ">
+              <div class=" fw-semibold">
+                  <h4 class="text-gray-900 fw-bold">For Certification Please do payment</h4>
+                  <div class="fs-6 text-gray-700 "><a href="https://pmny.in/ZIROXaq3rHzd" class="text-bolder">Click here For Payment</a>.</div>
+              </div>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br/>
+<div class="row">
+  
+  <div class="col-md-12">
+    <div class="card card-dashed">
+      <div class="card-header">
+        <h3 class="card-title">Project Artefacts</h3>
+         
+        <div class="card-toolbar" *ngIf = "allow_editing">
+          
+          <!-- <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+            <i class="fas fa-minus"></i>
+          </button> -->
+          <button type="button" class="btn btn-sm btn-primary" (click)="openModalLarge(modalHelp)"  >Document Upload Guidance</button>
+          <button type="button"    class="btn btn-outline-secondary me-2" class=" ibuttoncss"    placement="bottom"   title="Upload all your project related documents here. Avoid uploading any project code files." >  
+            <i class="bi bi-question-square m-2"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-sm table-bordered table-hover tblProfile" style="background-color:#fff">
+            <thead>
+              <tr style="background:#f4f4f4;">
+                <th class="col-md-4">Type</th>
+                <th class="col-md-3">Name</th>
+                <th class="col-md-1">Size</th>
+                <th class="col-md-2">Date</th>
+                <th class="col-md-5">By</th>
+                <th class="col-md-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let file of this.files">
+                <td>{{file.FileTypeName}}</td>
+                <td><a target="_new" href="{{file.id | azureURL : file.FileOriginalName }}">{{file.FileOriginalName}}</a></td>
+                <td>{{file.Size | filesize}}</td>
+                <td>{{file.UploadedOn | smallerdate | date: 'dd/MM/yyyy'}}</td>
+                <td>{{file.UploadedByName}}</td>
+                <td class="text-right py-0 align-middle">
+                  <div class="btn-group btn-group-sm">
+                    <button class="btn btn-active-danger" *ngIf = "allow_editing" id="trash" (click)="ProjectDocumentRemove(file.id)" ><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        <br/>
+<!-- <div *ngIf = "this.stundentIntern!='true' ">
+        <app-uploader   UploadedFromSection="project"  showMilestoneDocumentDropdown="false" showInternshipDropdown="false" showProjectDropdown="true" ShowProfileDropdown="false"   showConporateDocumentDropdown="false" showInstituteDocumentDropdown ="false" UploadedFromItemID="{{project_id}}" (OnFileUploaded)="NewFileUploaded($event)"></app-uploader>
+      </div> -->
+      <div *ngIf="this.stundentIntern=='false' ">       
+        <app-uploader  UploadedFromSection="project" 
+        [OptionsList]="optionsListCompetition"
+           UploadedFromItemID="{{project_id}}" (OnFileUploaded)="NewFileUploaded($event)"></app-uploader>
+
+      </div>
+      <div>       
+        <app-uploader  UploadedFromSection="project" 
+         
+            UploadedFromItemID="{{project_id}}"
+             (OnFileUploaded)="NewFileUploaded($event)" 
+             [OptionsList]="optionsList"
+             ></app-uploader>
+             
+      </div>
+      <!-- <app-uploader  UploadedFromSection="project"  showInternshipDropdown="true" showMilestoneDocumentDropdown="false" showProjectDropdown="false" ShowProfileDropdown="false"   showConporateDocumentDropdown="false" showInstituteDocumentDropdown ="false" UploadedFromItemID="{{project_id}}" (OnFileUploaded)="NewFileUploaded($event)"></app-uploader> -->
+
+ 
+      </div>
+    </div>
+  </div>
+</div>
+
+<br/>
+
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="card card-dashed">
+      <div class="card-header">
+        <h3 class="card-title">Discussion Board</h3>
+        <div class="card-toolbar" *ngIf = "allow_editing">
+       
+          &nbsp;
+          <button class="btn btn-sm pull-right" style="background-color:#020052bb;color:#fff;padding:5px;" (click)="openModal(modalAddQuestion)">Post Question</button>
+          <button    type="button"    class="btn btn-outline-secondary me-2" class=" ibuttoncss"    placement="bottom"   title="This section can be used for internal team discussions, answer any queries and resolve any issues. This discussion is accessible only to the team members."   >  
+            <i class="bi bi-question-square m-2"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+          <div class="row">
+          <div class="col-md-6" *ngFor="let quest of this.questions">
+            <h4 class="alert alert-info" style="background-color:#ECECEC; border:0px; color:#000;">Q: {{quest.question}}
+              <button class="btn float-end btn-info btn-sm " (click)="this.QuestionInFocusForAnwer=quest.id;openModal(modalAddAnswer);">Answer</button>
+              <button class="btn float-end btn-active-danger btn-sm" *ngIf="" (click)="DeleteQuestion(quest.id)" ><i class="fas fa-trash"></i></button>
+              &nbsp;
+              <span class="badge ffloat-end badge-light " style="color:gray">by: {{quest.questionByName}} , {{quest.questionOn | smallerdate}}</span>
+            </h4>
+            Answers :<br/>
+            <div *ngFor="let answer of quest.answers">
+                {{answer.answer}}
+                <br/>
+                <b>by: {{answer.answerByName}},  {{answer.answerOn | smallerdate}}</b>
+            </div>
+        </div>
+        </div>
+        <br/><br/>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+</div>
+<button class="invisible" (click)="openModal(modalAddAnswer)">Add Answer</button>
+
+<div class="row">
+    
+  <div class="col-md-6" *ngIf="CheckProjectCompletion()">
+    <div class="card card-dashed">
+      <div class="card-header">
+        <h3 class="card-title">Expert Questions / Complement / Suggestion</h3>
+        <div class="card-toolbar">
+          <button class="btn btn-info btn-sm pull-right" style="background-color:020052bb;padding:5px;" *ngIf="remarkOnlyJudge" (click)="openModal(modalAddRemark)">Add Remarks</button>
+          <button type="button"    class="btn btn-outline-secondary me-2" class=" ibuttoncss"    placement="bottom"   title="This section is only enabled once the project is marked complete and is pending Expert  review and TRL  rating. This board will contain feedback received post review done by Expert." >  
+            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" data-supported-dps="16x16" fill="currentColor" class="mercado-match" width="16" height="16" focusable="false" style ="margin:10px">
+              <path d="M12 2H4a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2zm-3 8v2H7.5A1.5 1.5 0 016 10.5a1.56 1.56 0 01.1-.5l1.08-3h2.13l-1.09 3zm0-3.75A1.25 1.25 0 1110.25 5 1.25 1.25 0 019 6.25z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+          <div *ngFor="let rem of this.remarks" id="remark_{{rem.id}}">
+              <button (click)="RemoveRemark(rem.id)" class="btn-sm float-end" style="background-color: #020052bb;border:none; color:#fff;" *ngIf="rem.remarkById==this.ForUserID">delete</button>
+              <b>by {{rem.remarkByName}} , {{rem.remarkOn| smallerdate | date: 'dd/MM/yyyy'}}</b>
+              <p>{{rem.remark}}</p>
+              <br/>
+              <br/>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+   <div class="col-md-6" *ngIf="CheckProjectCompletion()">
+    <div class="card card-dashed">
+      <div class="card-header">
+        <h3 class="card-title" *ngIf="this.Projecttype == 'start-up'">Investment Readiness Levels (IRL)</h3>
+        <h3 class="card-title" *ngIf="(this.Projecttype == 'research' || this.Projecttype == 'prototype' || this.Projecttype=='internship')">Technology Readiness Levels (TRL)</h3>
+        <div class="card-toolbar">
+          <button *ngIf="!current_user_is_student" style="padding: 5px;width:87px;" class="btn btn-info btn-sm pull-right" (click)="openModal(modalAddTRL)">Score</button>
+          &nbsp; 
+           <button type="button" *ngIf="this.Projecttype == 'start-up'" class="btn btn-success p-2 bd-highlight"  (click)="openModalLarge(modalHelpTRL)">IRL Map</button>
+           <button type="button" *ngIf="(this.Projecttype == 'research' || this.Projecttype == 'prototype' || this.Projecttype=='internship')" class="btn btn-success p-2 bd-highlight"  (click)="openModalLarge(modalHelpTRL)">TRL Map</button>
+           <button type="button"    class="btn btn-outline-secondary me-2" class=" ibuttoncss"    placement="bottom"   title="TRL rating is Technology Readiness Level rating. This will be only available once the project is marked complete and Expert review is requested. The rating can vary from 0 to 10 with 0 as lowest and 10 as highest rating." >  
+            <i class="bi bi-question-square m-2"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body row" style="text-align:center"  *ngIf="(this.Projecttype == 'research' || this.Projecttype == 'prototype' || this.Projecttype=='internship')">
+          <style>.c1{height: 9em;;width: 9em;background-color: #f4f4f4;border-radius: 50%;display: inline-block;text-align: center;
+          color:#fff; }</style>
+        
+         <div class="c1 text-dark col-md-6 float-start" style="margin-left: 15%"><span style="font-size:4.5em; text-align: center ">{{Rating_Average}}</span><br/>Rating</div>
+         <div class="c1 text-dark col-md-6 float-end" style="margin-left: 30%"><span style="font-size:4.5em; text-align: center;">{{trl}}</span><br/> TRL</div>
+         
+          (this is section is used by experts and judges to provide TRL, ratings and judgements)
+      </div>
+      <div class="card-body row" style="text-align:center"  *ngIf="this.Projecttype == 'start-up'">
+        <style>.c1{height: 9em;;width: 9em;background-color: #f4f4f4;border-radius: 50%;display: inline-block;text-align: center;
+        color:#fff; }</style>
+      
+       <div class="c1 text-dark col-md-6 float-start" style="margin-left: 15%"><span style="font-size:4.5em; text-align: center ">{{Rating_Average}}</span><br/>Rating</div>
+       <div class="c1 text-dark col-md-6 float-end" style="margin-left: 30%"><span style="font-size:4.5em; text-align: center;"  >{{trl}}</span><br/> IRL</div>
+       
+        (this is section is used by experts and judges to provide IRL, ratings and judgements)
+    </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ModalEdit Project -->
+<ng-template #modalEditProject let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Project - Edit Details</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group mb-5">
+      <label for="ProjectNewName">Field of Interest</label>
+      <select name="ProjectDomain" [(ngModel)]="ProjectDomain" formCon  class="form-select form-select-sm">
+        <option></option><option value="agriculture">Agriculture</option><option value="automotive">Automotive</option><option value="banking">Banking</option><option value="chemicals">Chemicals</option><option value="dairy">Dairy</option><option value="defence">Defence</option><option value="ecommerce">Ecommerce</option><option value="education">Education</option><option value="electronics">Electronics</option><option value="energy">Energy</option><option value="entertainment">Entertainment</option><option value="finance">Finance</option><option value="fisheries">Fisheries</option><option value="healthcare">Healthcare</option><option value="insurance">Insurance</option><option value="manufacturing">Manufacturing</option><option value="materials">Materials</option><option value="retail">Retail</option><option value="security">Security</option><option value="software">Software</option><option value="telecom">Telecom</option><option value="transportation">Transportation</option> <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="col-lg-12">
+        <div class="mb-3">
+          <label>Tags</label>
+          <input class="form-control" name="ProjectTags" [(ngModel)]="ProjectTags" />
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="mb-3">
+          <label>Description</label>
+          <textarea class="form-control" name="ProjectDescription" [(ngModel)]="ProjectDescription" 
+              style="width:100%; min-height:10em;" ></textarea>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="mb-3" *ngIf="CheckIsProjectLead()" >
+          <label>Status</label>
+          <select class="form-select" name="ProjectStatus" [(ngModel)]="ProjectStatus">
+              <option>In Progress</option>
+              <!-- <option>On Hold</option> -->
+              <option>Completed</option>
+          </select>
+        </div>
+        <div class="col-lg-12">
+          <label>Project Type</label>
+          <select class="form-select" name="ProjectType" [(ngModel)]="Projecttype" [disabled]="this.ProjectStatus == 'Completed'">
+            <option>Select Type</option><option value="research">Research</option><option value="prototype">Prototype</option><option value="start-up">Start-Up</option>   <option value="internship">IH Internship</option>
+        </select>
+        </div>
+    </div>
+    <div class="col-lg-12">
+      <div class="mb-3">
+        <label>End Date</label>
+        <input class="form-control" type="date" name="ProjectEndDate" [(ngModel)]="ProjectEndDate" 
+            style="width:100%;"  />
+      </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" style="background-color:020052bb" (click)="UpdateProject();modal.close();">Update</button>
+  </div>
+</ng-template>
+
+<!-- Modal ADD Member -->
+<ng-template #modalAddMember let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Project - Add Member</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    
+    <ul ngbNav #nav="ngbNav" class="nav-pills">
+
+      <li [ngbNavItem]="1"><a ngbNavLink>From Institute</a>
+        <ng-template ngbNavContent>
+            <div class="col-lg-12">
+              <div class="mb-3">
+                <label>Member</label>
+                <div class="input-group">
+                  <select class="form-select form-select-smm" name="EntityID" required="required" [(ngModel)]="ProjectMemberID" (change)="ProjMemberChange($event)">
+                    <option *ngFor="let entity of this.entities_filtered" value="{{entity.id}}">{{entity.name}}</option>
+                    <!-- <option>Other</option> -->
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label>Role</label>
+                <div class="input-group">
+                  <select class="form-select form-select-smm" id="ProjectMemberRoleID" name="ProjectMemberRoleID" required="required" 
+                  [(ngModel)]="ProjectMemberRoleID" (change)="ProjRoleChange($event)">
+                    <!--<option *ngFor="let role of this.roles" value="{{role.id}}">{{role.name}}</option>-->
+                    <option value="projectmember" selected>Project - Member</option>
+                    <option value="projectcolead">Project - Co-Lead</option>
+                    <!-- <option value="projectlead"  >Project - Lead</option> -->
+                    <option *ngIf = "allow_expert" value="expert"       >Expert / Reviewer</option>
+                     <option *ngIf = "allow_Institute" value="faculty"      >Institute - Faculty</option>
+                    <!-- <option value="principal"    >Institute - Principal</option> -->
+              <!-- <option value="roleother"    >Other</option>commented by bhagwat on 16-11-2022 -->
+                  </select>
+                </div>
+              </div>
+              <br/>
+              if you cannot see the user in the list, send an invitation from tab
+          </div>
+        </ng-template>
+      </li>
+    
+      <li [ngbNavItem]="2"><a ngbNavLink>Invite</a>
+        <ng-template ngbNavContent>
+          <div class="col-lg-12">
+            <div class="mb-3">
+              <label>Name</label>
+              <div class="input-group">
+                <input class="form-control form-control-sm" name="InviteName" required="required" [(ngModel)]="InviteName" />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label>Email</label>
+              <div class="input-group">
+                <input class="form-control form-control-sm" name="InviteEmail" required="required" [(ngModel)]="InviteEmail" />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label>Role</label>
+              <div class="input-group">
+                <select class="form-select form-select-sm" id="InviteRole" name="InviteRole" [(ngModel)]="InviteRole">
+                  <option value="projectmember" selected>Project - Member</option>
+                  <option value="projectcolead">Project - Co-Lead</option>
+                  <!-- <option value="projectlead"  >Project - Lead</option> -->
+                  <option *ngIf = "allow_expert" value="expert"       >Expert / Reviewer</option>
+                  <option  *ngIf = "allow_Institute" value="faculty"      >Institute - Faculty</option>
+                  <!-- <option value="principal"    >Institute - Principal</option> -->
+                </select>
+              </div>
+            </div>
+        </div>
+        
+        </ng-template>
+      </li>
+
+    </ul>
+    <br/>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+
+  </div>
+  <div class="modal-footer">
+    <!-- Added by Madhavi on 4-11-2022 for Button disabled -->
+    <button type="button" [disabled]="(!ProjectMemberRoleID || !ProjectMemberID)" [disabled]="(!InviteEmail || !InviteName)" class="btn btn-primary" (click)="ProjectMemberAdd();modal.close();">Submit</button>
+  </div>
+</ng-template>
+
+<!-- Modal ADD Question -->
+<ng-template #modalAddQuestion let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Project - Post Question</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-lg-12">
+        <div class="mb-3">
+          <label>Question</label>
+          <textarea class="form-control" name="ProjectQuestion" [(ngModel)]="ProjectQuestion" style="width:100%;" ></textarea>
+          
+        </div>
+        <span class="mt-5">
+          <input type="checkbox" name="select-post-feed" (change)="CheckPostFeed($event)"/> 
+          <label for="select-post-feed" class="p-3">
+            Do you want to post globally ? 
+          </label>
+        </span>
+    </div>
+  </div>
+  
+  <div class="modal-footer">
+     <!-- Added by Madhavi on 4-11-2022 for Button disabled -->
+    <button type="button" class="btn btn-primary" (click)="AddQuestion();PostQuestion();modal.close();">Submit</button>
+  </div>
+</ng-template>
+
+<!-- Modal ADD Project Question's Answer -->
+<ng-template #modalAddAnswer let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Project - Post Answer</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body" >
+    <div class="col-lg-12">
+        <div class="mb-3" >
+          <label>Answer</label>
+          <div class="input-group">
+            <textarea class="form-control" name="ProjectAnswer" [(ngModel)]="discussQuestionAnswer" ></textarea>
+            <!-- <textarea class="form-control" name="ProjectAnswer" [(ngModel)]="ProjectQuestionAnswer" ></textarea> -->
+
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="modal-footer" >
+     <!-- Added by Madhavi on 4-11-2022 for Button disabled -->
+    <button type="button" class="btn btn-primary" (click)="PushAnswer();modal.close();">Submit</button>
+  </div>
+</ng-template>
+
+<!-- Modal ADD Remark -->
+<ng-template #modalAddRemark let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Project - Post Remark</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-lg-12">
+        <div class="mb-3">
+          <label>Remark</label>
+          <div class="input-group">
+            <textarea class="form-control" name="ProjectRemark" required="required" [(ngModel)]="remark" ></textarea>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+     <!-- Added by Madhavi on 4-11-2022 for Button disabled -->
+    <button type="button" [disabled]="remark.length<1" class="btn btn-primary" (click)="AddRemark();modal.close();">Submit</button>
+  </div>
+</ng-template>
+
+<!-- Modal ADD Milestone -->
+<ng-template #modalAddMilestone let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Project - Post Milestone</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-lg-12">
+        <div class="mb-3">
+          <label>Milestone Date</label>
+          <div class="input-group">
+            <input type="date" class="form-control" placeholder="dd-mm-yyyy"  min="{{this.ProjectStartDate}}"name="MilestoneDate" [(ngModel)]="milestone_date" >
+          </div>
+        </div>
+        <div class="mb-3">
+          <label>Milestone Title</label>
+          <div class="input-group">
+            <input class="form-control" name="MilestoneName" [(ngModel)]="milestone_text">
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+       <!-- Added by Madhavi on 4-11-2022 for Button disabled -->
+    <button type="button" [disabled]="(milestone_date.length<1 || milestone_text.length<1) ? true : false" class="btn btn-primary" (click)="AddMilestone();modal.close();">Submit</button>
+  </div>
+</ng-template>
+
+
+<!-- Add Grade -->
+<ng-template #modalAddGrade let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{this.SelectedMemberName}} - Assessment</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+
+    <ul ngbNav #nav="ngbNav" class="nav-pills">
+
+      <li [ngbNavItem]="1"><a ngbNavLink>Assess</a>
+        <ng-template ngbNavContent>
+          <br/>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6">Hipster</div>
+              <div class="col-md-6"><input type="range" value="0" min="0" max="5" name="grade_hipster" [(ngModel)]="grade_hipster" 
+                oninput="this.nextElementSibling.value=this.value"> &nbsp;  &nbsp; 
+                  <output>{{grade_hipster}}</output></div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="col-md-6">Hacker</div>
+              <div class="col-md-6"><input type="range" value="0" min="0" max="5" name="grade_hacker" [(ngModel)]="grade_hacker" 
+                oninput="this.nextElementSibling.value=this.value"> &nbsp;  &nbsp; 
+                <output>{{grade_hacker}}</output></div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="col-md-6">Hustler</div>
+              <div class="col-md-6"><input type="range" value="0" min="0" max="5" name="grade_hustler" [(ngModel)]="grade_hustler" 
+                oninput="this.nextElementSibling.value=this.value"> &nbsp;  &nbsp; 
+                <output>{{grade_hustler}}</output></div>
+            </div>
+            
+          </div>
+        </ng-template>
+      </li>
+    
+      <li [ngbNavItem]="2"><a ngbNavLink>Grades</a>
+        <ng-template ngbNavContent>
+          <br/>
+        <table class="table table-bordered table-shaded" style="width:99%;" cellpadding="3">
+          <thead>
+            <tr class="table-warning"><th>Assessment By</th><th>Role</th><th>Hipster</th><th>Hacker</th><th>Hustler</th></tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let assess of SelectedMemberAssessment" style="border-bottom:1px dotted #e1e1e1 !important;">
+              <td>{{assess.assessByName}}</td>
+              <td>{{assess.assessByRole}}</td>
+              <td class="bg-light-success">{{assess.gradeHipster}}</td>
+              <td class="bg-light-success">{{assess.gradeHacker}}</td>
+              <td class="bg-light-success">{{assess.gradeHustler}}</td>
+            </tr>
+
+          </tbody>
+        </table>
+        </ng-template>
+        </li>
+    </ul>
+
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+</div>
+  <div class="modal-footer d-flex">
+      <span style="color:red ;" >*Experts are only permitted to assign grades once.*</span>
+      <button type="button" style="margin-left: 21%;" class="btn btn-primary p-2 bd-highlight"   (click)="AddAssessment();modal.close();">Submit</button>
+  </div>
+</ng-template>
+
+<!-- Add TRL -->
+<ng-template #modalAddTRL let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Project Technology Readiness Level</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body" style="text-align:center">
+      <form name="formJudgement" id="formJudgement">
+      <span style="color:navy">(Please rate out of 5 where 1 - poor, 2 – avg, 3 - good, 4 - very good, 5 - exceptional)</span>
+      <br/><br/>
+      <div *ngFor="let quest of this.ProjectCompetition.judge_questions; let qi = index" 
+      style="text-align: left;">
+        <div class="mb-6" *ngIf="quest.projectType==this.Projecttype">
+          <label class="form-label">{{qi+1}}. {{quest.question}}</label>
+          <textarea *ngIf="quest.isTextMultiLine" name="{{quest.id}}" class="form-control" 
+                    placeholder="in not more than 100 words"></textarea>
+                      <select *ngIf="quest.isRating" name="{{quest.id}}" 
+                      (change)="calculateRating();" class="ratings float-end" >
+                        <option *ngFor="let q of [].constructor(quest.ratingMax);let i = index "
+                        >{{i}}</option>
+                    </select>
+        </div>
+      </div>
+      <span class="float-right fw-bold fs-4">(Average Rating : {{Rating_Average}})</span>
+      <hr/>
+      <br/>
+        <div class="container-fluid">
+          <div class="" *ngIf="this.Projecttype=='research'">Please provide TRL ratings for this Research Project. (Please rate on TRL scale)</div>
+          <div class="" *ngIf="this.Projecttype=='prototype'">Please provide TRL ratings for this Re-Design Project. (Please rate on TRL scale)</div>
+          <div class="" *ngIf="this.Projecttype=='start-up'">Please provide IRL ratings for this Startup Idea Project. (Please rate on IRL scale)</div>
+          <br>
+          <div class="row">
+            <div class="col-md-6" *ngIf="this.Projecttype=='research' || this.Projecttype=='prototype' ">Mark Project TRL</div>
+            <div class="col-md-6" *ngIf="this.Projecttype=='start-up'">Mark Project IRL</div>
+            <div class="col-md-6">
+                <input type="range" name="trl" value="0" min="0" max="10" [(ngModel)]="trl" 
+                      oninput="this.nextElementSibling.value=this.value"> 
+                &nbsp;  &nbsp; 
+                <output>{{trl}}</output></div>
+          </div>
+          <br/>
+        </div>
+    </form>
+      <div class="input-group">
+            <label class="form-label">Please give your comments to qualify the above rating.</label><br/>
+            </div>
+            <div class="input-group">
+              <textarea class="form-control" name="TRLTextArea" [(ngModel)]="ratingComment"></textarea>
+            </div>
+</div>
+  <div class="modal-footer d-flex">
+      <button type="submit" class="btn p-2 bd-highlight" style="background-color:#020052bb;color:#fff;"  (click)="AddTRL();modal.close();">Submit</button>
+  </div>
+</ng-template>
+
+<!-- Add TRL Help -->
+<ng-template #modalHelpTRL let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" *ngIf="this.Projecttype == 'start-up'">Investment Readiness Level Map</h5>
+    <h5 class="modal-title" *ngIf="(this.Projecttype == 'research' || this.Projecttype == 'prototype')">Technology Readiness Level Map</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body" style="text-align:center" *ngIf="(this.Projecttype == 'research' || this.Projecttype == 'prototype'|| this.Projecttype=='internship')">
+
+        <img src="/assets/trl/TRL_ALL.jpg">
+
+</div>
+<div class="modal-body" style="text-align:center" *ngIf="this.Projecttype == 'start-up'">
+
+  <img src="/assets/trl/IRL.jpg">
+
+</div>
+  <div class="modal-footer d-flex">
+      <button type="button" class="btn btn-primary p-2 bd-highlight"  (click)="modal.close();">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #modalHelpMilestone let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Project Help - Definitions</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body" style="text-align:left">
+
+        <h4>The Hipster</h4>
+        Usually working their way into the mix as the designer or creative genius, they'll make sure the final product is cooler than anything else out there. But, not only that, they'll ensure the shade of blue used to accent the font really brings out the subtle homage to an artist from the '70's you've probably never heard of.
+        <br/><br/>
+        <h4>The Hacker</h4>
+        The one most likely to sit quietly through a board meeting until uttering the three sentences that answers the all important question of "how?" the new idea or initiative can be brought into reality. Resembling MacGyver with their ability to wield various lines of code or programing languages, you'll get dizzy trying to keep up with their keystrokes.
+        <br/><br/>
+        <h4>The Hustler</h4>
+        They have the tendency to be the most misunderstood member of this trio. The Hipster is likely to accuse the Hustler of having sold out to the man because of their constant question of "It's cool, but is it something our partners and clients want?" The Hacker is likely to do their best to avoid one on one conversations with the Hustler as a result of jock vs. geek episode back in high school.
+
+</div>
+  <div class="modal-footer d-flex">
+      <button type="button" class="btn btn-primary p-2 bd-highlight"  (click)="modal.close();">Close</button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #modalPostNew let-modal>
+  <form class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate" >
+  <div class="modal-header">
+    <h5 class="modal-title">Milestone - Completed</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <h5>Do you want to announce your milestones ?</h5>
+    <label class="p-2">
+      <input type="radio" name="radToAnnounce" checked value="0" (change)="this.To_Announce = false" />
+        No</label>
+    <label class="p-2">
+      <input type="radio" name="radToAnnounce" value="1" (change)="this.To_Announce = true" />
+      Yes</label>
+    
+     
+      <textarea *ngIf="this.To_Announce" class="form-control" placeholder="What do you want to talk about ?" rows="8" 
+              name="post_text" [(ngModel)]="post_text"  >
+      </textarea>
+
+      <div *ngIf="this.To_Announce" class="col-md-4">
+        <h5>Who can see your post ?</h5>
+        <select class="form-select rounded-pill border-3 p-3" aria-label="Default select example">
+          <option selected>Anyone</option>
+          <option value="1">Project Member</option>
+          <option value="2">All students /  Personnel from your Institute.</option>
+        </select>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <div class="">
+      <!-- <button type="button" class="btn btn-sm btn-light float-start me-auto ms-2">
+          <i class='attachment'
+          (click)="toggled = !toggled"
+          [(emojiPickerIf)]="toggled"
+          (emojiPickerSelect)="setEmoji($event)" *ngIf="this.To_Announce" style="font-style: normal;">😄</i>
+      </button> -->
+      
+      <button *ngIf="this.To_Announce" class="btn btn-sm btn-success float-end btn-runway-incubator" (click)="AddPost() ;modal.close();">Post</button> 
+  </div>
+  </div>
+  </form>
+</ng-template>
+
+<ng-template #modalDeleteProject let-modal>
+
+  <div class="modal-header">
+
+    <h5 class="modal-title">Delete Project</h5>
+
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <div class="col-lg-12">
+
+        <div class="mb-6">
+
+          <i class="bi bi-exclamation-triangle  red"></i>&nbsp;<label>Are you sure, you want to permanently delete this project?</label>
+
+          <br/>
+
+          <br/>
+
+          <label style="color: red;"> Please Note: Once the project is deleted, You will be no longer able to see the project in the list of projects.</label>
+
+        </div>
+
+    </div>
+
+   
+
+
+
+   
+
+  </div>
+
+  <div class="modal-footer">
+
+    <button type="button" class="btn red" style="background-color:rgba(246, 19, 19, 0.93);" (click)="deleteProject();modal.close();">Delete</button>
+
+    <button type="button" class="btn btn-primary" style="background-color: red;" (click)="modal.close();">Cancel</button>
+
+  </div>
+
+</ng-template>
+<ng-template #modalHelp let-modal>
+
+  <div class="modal-header">
+
+    <h5 class="modal-title">Help</h5>
+
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+
+  </div>
+
+  <div class="modal-body">
+
+    <table>
+
+      <th></th>
+
+      <tr><td>
+
+        <h5>Documents required to mark end of ROUND 1 milestone to enable 3rd party evaluation & feedback:</h5>
+
+      </td></tr>
+
+      <tr><td>Round 1 - Intro of team members: max 2 min video with each member presenting himself/herself and their role in max 20 sec (mp4 format and max. size 15 mb)/  </td></tr>
+
+<tr><td>Round 1 - Presentation: .pdf/.ppt explaining the project worked on as per PROJECTATHON format. </td></tr>
+
+<tr><td>Round 1 - Presentation video: 2 min video to explain Research presentation/Prototype presentation and demo/Start-up BMC (mp4 format and max. size 15 mb). </td></tr>
+
+<tr><td>Round 1 - Detailed project report: Research work final report, Prototype final report, Start-up Idea – Concept & BMC in PROJECTATHON recommended format.  </td></tr>
+
+<tr><td>Round 1 - PROJECTATHON form: Questionnaire provided by PROJECTATHON organizers to give gist of the project work. </td></tr>
+
+<br/>
+
+<br/>
+
+
+
+<tr><td><h5>Documents required to mark end of Final ROUND milestone to enable Expert Certification & Contest entry review </h5></td></tr>
+
+
+
+<tr><td>Final Round - Intro of team members: max 2 min video with each member presenting himself/herself and their role in max 20 sec (mp4 format and max. size 15 mb).</td></tr>
+
+<tr><td>Final Round - Presentation: .pdf/.ppt explaining the project worked on as per PROJECTATHON format.</td></tr>
+
+<tr><td>Final Round - Presentation video: 2 min video to explain Research presentation/Prototype presentation and demo/Start-up BMC (mp4 format and max. size 15 mb).</td></tr>
+
+<tr><td>Final Round - Detailed project report: Research work final report, Prototype final report, Start-up Idea – Concept & BMC in PROJECTATHON recommended format </td></tr>
+
+<tr><td>Final Round - PROEJCTATHON form: Questionnaire provided by PROJECTATHON organizers to give gist of the project work.</td></tr>
+
+    </table>
+
+   
+
+  </div>
+
+  <div class="modal-footer">
+
+  </div>
+
+</ng-template>
+
+
+<ng-template #milestoneComplete let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Project Milestone </h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-lg-12">
+      <div class="mb-6">
+        <i class="bi bi-exclamation-triangle  red"></i>&nbsp;<label>Do you want to this milestone complete ? </label>
+        <br/>
+        <br/>
+        <label style="color: red;"> Please Note: Please Upload the Document.</label>
+      </div>
+      <!-- <app-uploader  UploadedFromSection="project" DefaultUploadDocumentType="{{milestoneName}}" 
+      showMilestoneDocumentDropdown="true" ShowDropdown="false" 
+      showProjectDropdown="false" ShowProfileDropdown="false"  
+       showConporateDocumentDropdown="false" showInstituteDocumentDropdown ="false"
+        milestoneName="bhagwat" UploadedFromItemID="{{project_id}}" 
+        (OnFileUploaded)="NewFileUploaded($event)"> </app-uploader> -->
+
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn " style="background-color:rgba(6, 211, 3, 0.93);"
+      (click)="isMilestoneComplete = !isMilestoneComplete;UpdateMilestoneStatus(isMilestoneComplete);">Complete</button>
+    <button type="button" class="btn btn-primary" (click)="modal.close();">Cancel</button>
+  </div>
+  
+  
+  
+  </ng-template>
+
+  
+<ng-template #QuestionnaireModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Exam</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    
+    
+  </div>
+  <div class="modal-footer" >
+  <div class="row">
+    
+    <div class="col-md-6" *ngIf="allow_editing">
+      <button class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+      data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+      [routerLink]="['/questionaire' , project.id,true,project.projecttype,project.eventId]" (click)="modal.dismiss()">Team Questionnaire</button>
+    </div> 
+    <div class="col-md-6" *ngIf="!remarkOnlyJudge">
+      <button class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+      data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+      [routerLink]="['/questionaire' , project.id,false,project.projecttype,project.eventId]" (click)="modal.dismiss()">Indi Questionnaire</button>
+    </div>
+    <div class="col-md-6" *ngIf="remarkOnlyJudge">
+      <button class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+      data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+      [routerLink]="['/questionaire/questionaire-list' , project.id]" (click)="modal.dismiss()">View Questionnaire</button>
+    </div>
+    <!-- <div class="col-md-6" *ngIf="allow_editing">
+      <button *ngIf="this.Projecttype=='research'" class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+      data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+      [routerLink]="['/questionaire' , 'ihexam2230210', project.id,true]" (click)="modal.dismiss()">Team Questionnaire</button>
+
+      <button *ngIf="this.Projecttype=='start-up'" class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+      data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+      [routerLink]="['/questionaire' , 'ihexam1230210', project.id,true]" (click)="modal.dismiss()">Team Questionnaire</button>
+    
+      <button *ngIf="this.Projecttype=='prototype'" class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+      data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+      [routerLink]="['/questionaire' , 'ihexam3230210', project.id,true]"  (click)="modal.dismiss()">Team Questionnaire</button>    
+  
+    </div> 
+    <div class="col-md-6" >
+      <button *ngIf="this.Projecttype=='research'" class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+      data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+      [routerLink]="['/questionaire' , 'ihexam5230210', project.id,false]" (click)="modal.dismiss()">Indi Questionnaire</button>
+    
+      <button *ngIf="this.Projecttype=='start-up'" class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+      data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+      [routerLink]="['/questionaire' , 'ihexam4230210', project.id,false]" (click)="modal.dismiss()">Indi Questionnaire</button>
+    
+      <button *ngIf="this.Projecttype=='prototype'" class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+      data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+      [routerLink]="['/questionaire' , 'ihexam6230210', project.id,false]"  (click)="modal.dismiss()">Indi Questionnaire</button>    
+  
+    </div> -->
+    
+  </div>
+      
+   
+  </div>
+  <!-- <div class="modal-footer" *ngIf="!allow_editing">
+    <button *ngIf="this.Projecttype=='research'"  class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+    data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+    [disabled]="!allow_editing">Questionnaire</button>
+    
+    <button *ngIf="this.Projecttype=='start-up'" class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+    data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+    [disabled]="!allow_editing">Questionnaire</button>
+  
+    <button *ngIf="this.Projecttype=='prototype'" class="btn btn-custom btn-primary p-3" data-bs-trigger="hover" id="certification"
+    data-bs-toggle="tooltip" data-bs-dismiss-="click" 
+    [disabled]="!allow_editing">Questionnaire</button>
+    
+  </div>
+  -->
+</ng-template>
